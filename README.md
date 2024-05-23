@@ -1,4 +1,3 @@
 # VOTProekt
-## Задача
-Web service с authentication чрез OpenLDAP и СУБД. Сървиса да изпълнява 2 фази build и production с docker-compose. СУБД да е cluster от container-и с LB.
-И някакъв фронтенд.
+## Условие на задача
+Да се разработи web service чрез docker compose, който да има фронтенд и бекенд част с две фази - build и production. Web service-а, трябва да има автентификация и авторизация към openid provider, който е в същата инфраструктура. Също така, трябва да съхранява потребителски данни в СУБД клъстер през load balancer. 
