@@ -1,24 +1,76 @@
 services:
-  db:
+  mysql-source:
     image: mysql
-    container_name: mysql_server
+    container_name: mysql-source
     restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1024M
+        reservations:
+          memory: 512M
     ports: 
       - 3367:3367
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: Vot
     volumes:
-      - db_data:/var/lib/mysql
+      - mysql_source_data:/var/lib/mysql
+      - ./database/source-my.cnf:/etc/mysql/my.cnf
+      - ./database/queries/source:/docker-entrypoint-initdb.d 
+      - ./database/set_permissions_and_start_mysql.sh:/docker-entrypoint-init.d/set_permissions_and_start_mysql.sh
+    entrypoint: ["/docker-entrypoint-init.d/set_permissions_and_start_mysql.sh"]
+    networks:
+      - mysql_net
+  
+  mysql-replica:
+    image: mysql
+    container_name: mysql-replica
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1024M
+        reservations:
+          memory: 512M
+    ports: 
+      - 3368:3367
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: Vot
+    volumes:
+      - mysql_replica_data:/var/lib/mysql
+      - ./database/replica-my.cnf:/etc/mysql/my.cnf
+      - ./database/queries/replica:/docker-entrypoint-initdb.d 
+      - ./database/set_permissions_and_start_mysql.sh:/docker-entrypoint-init.d/set_permissions_and_start_mysql.sh
+    entrypoint: ["/docker-entrypoint-init.d/set_permissions_and_start_mysql.sh"]
+    depends_on:
+      - mysql-source
+    networks:
+      - mysql_net
 
   backend:
     build: ./backend
     container_name: backend
+    environment:
+      - NODE_OPTIONS=--max_old_space_size=512
+      - GENERATE_SOURCEMAP=false
     ports: 
       - 5000:5000
-    command: npm run dev
-    depends_on: 
-      - db
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          memory: 128M
+   
+
+networks:
+  mysql_net:
 
 volumes:
-  db_data:
+  mysql_source_data:
+  mysql_replica_data:

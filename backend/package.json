@@ -4,7 +4,8 @@
   "type": "module",
   "main": "./src/App.mjs",
   "scripts": {
-    "dev": "nodemon ./src/App.js"
+    "dev": "nodemon ./src/App.mjs",
+    "start": "node ./src/App.mjs"
   },
   "author": "",
   "license": "ISC",
