@@ -1,6 +1,6 @@
 services:
   mysql-source:
-    image: mysql
+    image: mysql:8.0
     container_name: mysql-source
     restart: always
     deploy:
@@ -11,21 +11,19 @@ services:
         reservations:
           memory: 512M
     ports: 
-      - 3367:3367
+      - 3306:3306
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: pass
       MYSQL_DATABASE: Vot
     volumes:
       - mysql_source_data:/var/lib/mysql
       - ./database/source-my.cnf:/etc/mysql/my.cnf
       - ./database/queries/source:/docker-entrypoint-initdb.d 
-      - ./database/set_permissions_and_start_mysql.sh:/docker-entrypoint-init.d/set_permissions_and_start_mysql.sh
-    entrypoint: ["/docker-entrypoint-init.d/set_permissions_and_start_mysql.sh"]
     networks:
       - mysql_net
   
   mysql-replica:
-    image: mysql
+    image: mysql:8.0
     container_name: mysql-replica
     restart: always
     deploy:
@@ -36,37 +34,18 @@ services:
         reservations:
           memory: 512M
     ports: 
-      - 3368:3367
+      - 3307:3306
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: pass
       MYSQL_DATABASE: Vot
     volumes:
       - mysql_replica_data:/var/lib/mysql
       - ./database/replica-my.cnf:/etc/mysql/my.cnf
       - ./database/queries/replica:/docker-entrypoint-initdb.d 
-      - ./database/set_permissions_and_start_mysql.sh:/docker-entrypoint-init.d/set_permissions_and_start_mysql.sh
-    entrypoint: ["/docker-entrypoint-init.d/set_permissions_and_start_mysql.sh"]
     depends_on:
       - mysql-source
     networks:
       - mysql_net
-
-  backend:
-    build: ./backend
-    container_name: backend
-    environment:
-      - NODE_OPTIONS=--max_old_space_size=512
-      - GENERATE_SOURCEMAP=false
-    ports: 
-      - 5000:5000
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 512M
-        reservations:
-          memory: 128M
-   
 
 networks:
   mysql_net:
