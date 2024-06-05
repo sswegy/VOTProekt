@@ -1,8 +1,9 @@
 import mysql from "mysql2";
 
 export const DBPool = mysql.createPool({
-    host: 'db',
+    host: 'proxysql',
+    port: '6033',
     user: 'root',
-    password: 'root',
+    password: 'pass',
     database: 'Vot'
 }).promise();
