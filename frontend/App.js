@@ -1,9 +1,12 @@
+import { Button } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import MainScreen from "./screens/MainScreen";
+import NewPostScreen from "./screens/NewPostScreen";
 import { COLORS } from "./Constants";
+import { useNavigation } from "@react-navigation/native";
 
 const Stack = createNativeStackNavigator();
 
@@ -24,8 +27,27 @@ export default function App() {
         <Stack.Screen
           name="MainScreen"
           component={MainScreen}
-          options={{
-            title: "Home",
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="NewPostScreen"
+          component={NewPostScreen}
+          options={({ navigation }) => ({
+            title: "New Post",
+            headerLeft: () => (
+              <Button
+                onPress={() => navigation.goBack()}
+                title="Cancel"
+                color={COLORS.red}
+              />
+            ),
+            headerRight: () => (
+              <Button
+                onPress={() => {}}
+                title="Submit"
+                color={COLORS.wenge}
+              />
+            ),
             headerShadowVisible: true,
             headerStyle: {
               backgroundColor: COLORS.emerald,
@@ -35,7 +57,7 @@ export default function App() {
               shadowRadius: 9.11,
             },
             headerTintColor: COLORS.onyx,
-          }}
+          })}
         />
       </Stack.Navigator>
     </NavigationContainer>

@@ -10,7 +10,7 @@ import { COLORS } from "../Constants";
 import Card from "../components/Card";
 
 
-export default function ProfileScreen({ navigation }) {
+export default function ProfileScreen() {
     return (
         <View style={styles.container}>
             <Text>profile</Text>
