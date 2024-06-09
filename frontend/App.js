@@ -6,7 +6,7 @@ import RegisterScreen from "./screens/RegisterScreen";
 import MainScreen from "./screens/MainScreen";
 import NewPostScreen from "./screens/NewPostScreen";
 import { COLORS } from "./Constants";
-import { useNavigation } from "@react-navigation/native";
+
 
 const Stack = createNativeStackNavigator();
 
