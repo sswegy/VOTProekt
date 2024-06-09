@@ -29,10 +29,10 @@ const keycloak = new Keycloak(
   {
     clientId: "mobile-app",
     bearerOnly: true,
-    serverUrl: "http://localhost:8080",
+    serverUrl: "http://keycloak:8080",
     realm: "backend",
     credentials: {
-      secret: "PVrjSI7neFU16lzHTf87Vxdn7hleb1ed"
+      secret: "ylQ6JOiDbL4zZW7gVXpXOeUlqoITe5C2"
     }
   }
 );
