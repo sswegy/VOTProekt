@@ -59,7 +59,7 @@ services:
       - 6033:6033 # proxy interface
     volumes:
       - ./database/proxysql.cnf:/etc/proxysql.cnf
-      - ./database/queries/ proxysql_init.sql:/docker-entrypoint-initdb.d/proxysql_init.sql
+      - ./database/queries/initproxysql.sql:/docker-entrypoint-initdb.d/initproxysql.sql
     command: ["sh", "-c", "proxysql --initial -f /etc/proxysql.cnf && sleep 10 && mysql -u admin -p admin -h 127.0.0.1 -P 6032 < /docker-entrypoint-initdb.d/proxysql_init.sql"]
 
   keycloak:
@@ -69,6 +69,13 @@ services:
       - DB_VENDOR=h2
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=pass
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1536M
+        reservations:
+          memory: 1024M
     ports:
       - "8080:8080"
     volumes:

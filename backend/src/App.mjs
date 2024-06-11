@@ -2,14 +2,16 @@ import express from "express";
 import session from "express-session";
 import Keycloak from "keycloak-connect";
 import cors from "cors";
-import { createUser, getUsers } from "./controllers/UsersController.mjs";
-import usersRouter from "./routers/UsersRouter.mjs";
+import jwt from "jsonwebtoken";
+import authRouter from "./routers/AuthRouter.mjs";
 import postsRouter from "./routers/PostsRouter.mjs";
+import { keycloakConfig } from "./KeycloakConfig.js";
 
 const app = express();
 const port = 5000;
 app.use(cors());
 app.use(express.json());
+
 const memoryStore = new session.MemoryStore();
 app.use(
   session({
@@ -19,37 +21,13 @@ app.use(
     store: memoryStore,
   })
 );
-app.use("/users", usersRouter);
-app.use("/posts", postsRouter);
 
-const keycloak = new Keycloak(
-  {
-    store: memoryStore,
-  },
-  {
-    clientId: "mobile-app",
-    bearerOnly: true,
-    serverUrl: "http://keycloak:8080",
-    realm: "backend",
-    credentials: {
-      secret: "ylQ6JOiDbL4zZW7gVXpXOeUlqoITe5C2"
-    }
-  }
-);
+const keycloak = new Keycloak({ store: memoryStore }, keycloakConfig);
+
 app.use(keycloak.middleware());
 
-app.post("/auth/login", (req, res) => {
-  const { username, password } = req.body;
-  keycloak.grantManager
-    .obtainDirectly(username, password)
-    .then((grant) => {
-      res.json({ token: grant.access_token.token });
-    })
-    .catch((err) => {
-      console.error("Failed to login", err);
-      res.status(401).json({ message: "Invalid username or password" });
-    });
-});
+app.use("/auth", authRouter);
+app.use("/posts", postsRouter);
 
 app.get("/test", (req, res) => {
   res.send("test");

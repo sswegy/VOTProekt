@@ -26,14 +26,11 @@ export default function LoginScreen({ navigation }) {
       );
 
       if (response.status === 200) {
-        const { token } = response.data;
-        console.log("Login successful", token);
         navigation.replace("MainScreen");
       } else {
         Alert.alert("Login failed", "Invalid username or password");
       }
     } catch (error) {
-      console.error("Login error:", error);
       Alert.alert("Login error", "Failed to login");
     }
   };

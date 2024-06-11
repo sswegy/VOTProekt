@@ -20,13 +20,16 @@ export default function RegisterScreen({ navigation }) {
 
   const handleRegister = async () => {
     try {
-      const response = await axios.post("http://192.168.88.18:5000/auth/register", {
-        username,
-        password,
-        email,
-        firstName,
-        lastName,
-      });
+      const response = await axios.post(
+        "http://192.168.88.18:5000/auth/register",
+        {
+          username,
+          password,
+          email,
+          firstName,
+          lastName,
+        }
+      );
 
       if (response.status === 201) {
         Alert.alert("Registration successful", "You can now log in");
