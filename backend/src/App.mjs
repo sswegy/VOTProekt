@@ -2,7 +2,6 @@ import express from "express";
 import session from "express-session";
 import Keycloak from "keycloak-connect";
 import cors from "cors";
-import jwt from "jsonwebtoken";
 import authRouter from "./routers/AuthRouter.mjs";
 import postsRouter from "./routers/PostsRouter.mjs";
 import { keycloakConfig } from "./KeycloakConfig.js";

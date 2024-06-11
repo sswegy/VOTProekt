@@ -6,5 +6,5 @@ CREATE TABLE Posts (
     title TEXT NOT NULL,
     content TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    username VARCHAR(255) NOT NULL,
+    username VARCHAR(255) NOT NULL
 );
